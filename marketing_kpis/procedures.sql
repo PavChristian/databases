@@ -113,6 +113,9 @@ BEGIN
             SUM(impressions) AS total_ads,
             SUM(clicks) AS total_daily_clicks,
             SUM(orders) AS num_orders,
+            ROUND(SUM(mark_spent)/SUM(clicks), 1) AS cost_per_click,
+			ROUND(SUM(mark_spent)/SUM(leads), 1) AS cost_per_lead,
+			ROUND(SUM(mark_spent)/SUM(orders), 1) AS custoner_acq_cost,
             ROUND(CalculateROMI(SUM(revenue), SUM(mark_spent)), 2) AS daily_romi,
             CalculateConversionRate(SUM(leads), SUM(clicks)) AS daily_conversion_rate
         FROM

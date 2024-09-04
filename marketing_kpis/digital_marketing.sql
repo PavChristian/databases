@@ -122,6 +122,9 @@ SELECT
     SUM(impressions) AS total_ads,
     SUM(clicks) AS total_daily_clicks,
     SUM(orders) AS num_orders,
+    ROUND(SUM(mark_spent)/SUM(clicks), 1) AS cost_per_click,
+    ROUND(SUM(mark_spent)/SUM(leads), 1) AS cost_per_lead,
+    ROUND(SUM(mark_spent)/SUM(orders), 1) AS custoner_acq_cost,
     ROUND(CalculateROMI(SUM(revenue), SUM(mark_spent)), 2) AS daily_romi,
     CalculateConversionRate(SUM(leads), SUM(clicks)) AS daily_conversion_rate
 FROM
@@ -171,6 +174,20 @@ FROM
 GROUP BY
 	category;
 
+-- Analyzing performance by tier
+
+SELECT
+	ExtractTier(campaign_name) AS tier, #This function extract the tier of each campaign
+    ROUND(AVG(CalculateROMI(revenue, mark_spent)), 1) AS avg_romi,
+    ROUND(AVG(revenue), 1) AS avg_revenue,
+    ROUND(AVG(mark_spent), 1) AS avg_spending
+FROM
+	marketing
+WHERE
+	ExtractTier(campaign_name) != 'NA'
+GROUP BY 
+	ExtractTier(campaign_name);
+    
 
 
 
